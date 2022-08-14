@@ -33,3 +33,7 @@
 
 # visual studio
 .vs/*
+
+# bin and intermediates
+bin/*
+bin-Intermediate/*
