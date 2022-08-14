@@ -37,3 +37,6 @@
 # bin and intermediates
 bin/*
 bin-Intermediate/*
+
+# user 
+*.user
