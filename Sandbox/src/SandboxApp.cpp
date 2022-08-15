@@ -5,7 +5,7 @@ class Sandbox : public four::Application
 public:
 	Sandbox()
 	{
-
+		FOUR_LOG_TRACE("Hello World!");
 	}
 	~Sandbox()
 	{
