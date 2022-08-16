@@ -2,10 +2,6 @@
 
 #include "Four/Core.h"
 
-#include <string>
-#include <functional>
-#include <cstdint>
-
 namespace four {
 	// TODO: prevent blocking event, buffer them later maybe
 	enum class EventType

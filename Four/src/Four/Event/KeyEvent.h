@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace four {
 
 	class FOUR_API KeyEvent : public Event

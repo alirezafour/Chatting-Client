@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace four {
 
 	class FOUR_API MouseMovedEvent : public Event

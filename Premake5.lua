@@ -19,6 +19,10 @@ project "Four"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-Intermediate/" .. outputdir .. "/%{prj.name}")
 
+    --pre Header
+    pchheader "fourpch.h" 
+    pchsource "Four/src/fourpch.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",
@@ -30,6 +34,7 @@ project "Four"
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include"
     }
+
 
     filter "system:windows"
         cppdialect "C++20"
