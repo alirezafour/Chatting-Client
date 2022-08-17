@@ -1,4 +1,5 @@
 #pragma once
+#include "fourpch.h"
 
 #include "Core.h"
 #include "spdlog/spdlog.h"

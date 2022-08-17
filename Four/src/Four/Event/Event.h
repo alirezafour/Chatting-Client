@@ -1,5 +1,5 @@
 #pragma once
-
+#include "fourpch.h"
 #include "Four/Core.h"
 
 namespace four {

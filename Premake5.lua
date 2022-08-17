@@ -11,6 +11,13 @@ workspace "Four"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+-- adding GLFW --
+IncludeDir["GLFW"] = "Four/vendor/GLFW/include"
+
+include "Four/vendor/GLFW" -- Adding glfw premake file to this
+-- adding GLFW --
+
 project "Four"
     location "Four"
     kind "SharedLib"
@@ -32,9 +39,15 @@ project "Four"
     includedirs
     {
         "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.GLFW}"
     }
 
+	links -- link static GLFW
+	{ 
+		"GLFW",
+		"opengl32.lib"
+	}
 
     filter "system:windows"
         cppdialect "C++20"
@@ -53,16 +66,16 @@ project "Four"
         }
 
         filter "configurations:Debug"
-            defines "FOUR_DEBUG"
+            defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
             symbols "On"
 
         filter "configurations:Develpment"
-            defines "FOUR_DEVELOPMENT"
+            defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
             symbols "On"
             optimize "On"
 
-        filter "configurations:Shipping"
-            defines "FOUR_SHIPPING"
+        filter "configurations:Release"
+            defines "FOUR_RELEASE"
             optimize "On"
 
         --filters { "system:windows", "configurations:Develpment"}
@@ -112,8 +125,8 @@ project "Sandbox"
             symbols "On"
             optimize "On"
 
-        filter "configurations:Shipping"
-            defines "FOUR_SHIPPING"
+        filter "configurations:Release"
+            defines "FOUR_RELEASE"
             optimize "On"
 
         --filters { "system:windows", "configurations:Develpment"}

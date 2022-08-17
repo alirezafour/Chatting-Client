@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Event/Event.h"
+#include "Window.h"
 
 namespace four {
 
@@ -12,6 +13,10 @@ namespace four {
 		virtual ~Application();
 
 		void Run();
+
+	private:
+		std::unique_ptr<Window> m_Window;
+		bool m_Running = true;
 	};
 
 	// define in clinet

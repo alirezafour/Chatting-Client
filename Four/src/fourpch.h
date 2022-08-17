@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Four/Log.h"
+
 
 #ifdef FOUR_PLATFORM_WINDOWS
 	#include <Windows.h>

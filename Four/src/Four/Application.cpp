@@ -4,11 +4,13 @@
 #include "Event/ApplicationEvent.h"
 #include "Log.h"
 
+#include "GLFW/glfw3.h"
+
 namespace four {
 
 	Application::Application()
 	{
-
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application()
@@ -18,9 +20,9 @@ namespace four {
 
 	void Application::Run()
 	{
-		WindowResizeEvent e(1280, 720);
-		FOUR_LOG_TRACE(e);
-		while (true);
+		while (m_Running)
+		{
+			m_Window->OnUpdate();
+		}
 	}
-
 }
