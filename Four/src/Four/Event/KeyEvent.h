@@ -15,6 +15,7 @@ namespace four {
 		KeyEvent(int32_t keycode)
 			: m_KeyCode(keycode) {}
 
+	private:
 		int32_t m_KeyCode;
 		
 	};
@@ -22,10 +23,10 @@ namespace four {
 	class FOUR_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int32_t keycode, int32 repeatCount)
+		KeyPressedEvent(int32_t keycode, int32_t repeatCount)
 			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		EVENT_CLASS_TYPE(KeyPressedEvent)
+		EVENT_CLASS_TYPE(KeyPressed)
 
 		inline int32_t GetRepeatCount() const { return m_RepeatCount; }
 
@@ -33,7 +34,7 @@ namespace four {
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << "(( " << m_RepeatCount << " repeats ))";
+			ss << "KeyPressedEvent: " << GetKeyCode() << "(( " << m_RepeatCount << " repeats ))";
 			return ss.str();
 		}
 
@@ -44,16 +45,16 @@ namespace four {
 	class FOUR_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int32_t keycode)
+		KeyReleasedEvent(int32_t keycode)
 			: KeyEvent(keycode) {}
 
-		EVENT_CLASS_TYPE(KeyReleasedEvent)
+		EVENT_CLASS_TYPE(KeyReleased)
 
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleasedEvent: " << m_KeyCode;
+			ss << "KeyReleasedEvent: " << GetKeyCode();
 			return ss.str();
 		}
 	};

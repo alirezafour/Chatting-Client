@@ -23,8 +23,15 @@ namespace four {
 
 	private:
 		virtual void Initialize(const WindowProperty& props);
+
 		virtual void UnInitialize();
 
+		void SetWindowSizeCallback();
+		void SetKeyCallback();
+		void SetMouseButtonCallback();
+		void SetScrollCallback();
+		void SetCursorPosCallback();
+		void SetErrorCallback();
 	private:
 		GLFWwindow* m_Window;
 

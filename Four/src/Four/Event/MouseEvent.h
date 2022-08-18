@@ -10,7 +10,7 @@ namespace four {
 		MouseMovedEvent(float x, float y)
 			: m_MouseX(x), m_MouseY(y) {}
 
-		EVENT_CLASS_TYPE(MouseMovedEvent)
+		EVENT_CLASS_TYPE(MouseMoved)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 
 		inline float GetX() const { return m_MouseX; }
@@ -33,7 +33,7 @@ namespace four {
 		MouseScrolledEvent(float xOffset, float yOffset)
 			: m_XOffset(xOffset), m_YOffset(xOffset) {}
 
-		EVENT_CLASS_TYPE(MouseScrolledEvent)
+		EVENT_CLASS_TYPE(MouseScrolled)
 			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 
 			inline float GetXOffset() const { return m_XOffset; }
@@ -60,7 +60,8 @@ namespace four {
 	protected:
 		MouseButtonEvent(int32_t button)
 			: m_Button(button) {}
-	private:
+
+	protected:
 		int32_t m_Button;
 	};
 

@@ -67,15 +67,18 @@ project "Four"
 
         filter "configurations:Debug"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
+            buildoptions "/MDd"
             symbols "On"
 
         filter "configurations:Develpment"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
+            buildoptions "/MD"
             symbols "On"
             optimize "On"
 
         filter "configurations:Release"
             defines "FOUR_RELEASE"
+            buildoptions "/MD"
             optimize "On"
 
         --filters { "system:windows", "configurations:Develpment"}
@@ -118,15 +121,18 @@ project "Sandbox"
 
         filter "configurations:Debug"
             defines "FOUR_DEBUG"
+            buildoptions "/MDd"
             symbols "On"
 
         filter "configurations:Develpment"
             defines "FOUR_DEVELOPMENT"
+            buildoptions "/MD"
             symbols "On"
             optimize "On"
 
         filter "configurations:Release"
             defines "FOUR_RELEASE"
+            buildoptions "/MD"
             optimize "On"
 
         --filters { "system:windows", "configurations:Develpment"}
