@@ -53,6 +53,8 @@ namespace four {
 		virtual const char* GetName() const = 0;
 		virtual int32_t GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
+		void SetHandled(bool value) { m_Handled = value; }
+		bool GetHandled() const { return m_Handled; }
 
 		inline bool IsInCategory(EventCategory category)
 		{
