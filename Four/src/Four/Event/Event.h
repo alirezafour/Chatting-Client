@@ -19,6 +19,7 @@ namespace four {
 
 		KeyPressed,
 		KeyReleased,
+		KeyTyped,
 
 		MouseButtonPressed,
 		MouseButtonReleased,

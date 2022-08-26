@@ -143,6 +143,13 @@ namespace four {
 					break;
 				}
 			});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint)
+			{
+				WindowData& data = *(static_cast<WindowData*>(glfwGetWindowUserPointer(window)));
+				KeyTypedEvent event(codepoint);
+				data.EventCallback(event);
+			});
 	}
 
 	void WindowsWindow::SetWindowSizeCallback()

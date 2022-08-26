@@ -59,4 +59,21 @@ namespace four {
 		}
 	};
 
+	class FOUR_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int32_t keycode)
+			: KeyEvent(keycode) {}
+
+		EVENT_CLASS_TYPE(KeyTyped)
+
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTyped: " << GetKeyCode();
+			return ss.str();
+		}
+	};
+
 }

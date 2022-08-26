@@ -4,3 +4,7 @@
 [submodule "Four/vendor/GLFW"]
 	path = Four/vendor/GLFW
 	url = https://github.com/glfw/glfw
+[submodule "Four/vendor/imgui"]
+	path = Four/vendor/imgui
+	url = https://github.com/ocornut/imgui
+	branch = docking
