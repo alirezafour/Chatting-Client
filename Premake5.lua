@@ -12,11 +12,11 @@ workspace "Four"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
--- adding GLFW --
 IncludeDir["GLFW"] = "Four/vendor/GLFW/include"
+IncludeDir["Glad"] = "Four/vendor/Glad/include"
 
-include "Four/vendor/GLFW" -- Adding glfw premake file to this
--- adding GLFW --
+include "Four/vendor/GLFW" -- Adding glfw premake
+include "Four/vendor/Glad" -- Adding glad premake
 
 project "Four"
     location "Four"
@@ -40,12 +40,14 @@ project "Four"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}"
     }
 
-	links -- link static GLFW
+	links -- link static libs
 	{ 
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -57,7 +59,8 @@ project "Four"
         defines
         {
             "FOUR_PLATFORM_WINDOWS",
-            "FOUR_BUILD_DLL"
+            "FOUR_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         postbuildcommands

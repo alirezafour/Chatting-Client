@@ -1,6 +1,8 @@
 #include "fourpch.h"
 #include "WindowsWindow.h"
 
+#include "glad/glad.h"
+
 #include "Four/Event/ApplicationEvent.h"
 #include "Four/Event/KeyEvent.h"
 #include "Four/Event/MouseEvent.h"
@@ -47,6 +49,9 @@ namespace four {
 
 		m_Window = glfwCreateWindow(static_cast<int32_t>(m_Data.Width), static_cast<int32_t>(m_Data.Height), m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		FOUR_CORE_ASSERT(status, "Failded to init glad!");
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
