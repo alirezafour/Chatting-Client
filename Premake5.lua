@@ -1,6 +1,7 @@
 -- premake 5
 workspace "Four"
     architecture "x64"
+    startproject "Sandbox"
 
     configurations
     {
@@ -16,9 +17,12 @@ IncludeDir["GLFW"] = "Four/vendor/GLFW/include"
 IncludeDir["Glad"] = "Four/vendor/Glad/include"
 IncludeDir["ImGui"] = "Four/vendor/imgui"
 
-include "Four/vendor/GLFW" -- Adding glfw premake
-include "Four/vendor/Glad" -- Adding glad premake
-include "Four/vendor/imgui"
+group "Dependecies"
+    include "Four/vendor/GLFW" -- Adding glfw premake
+    include "Four/vendor/Glad" -- Adding glad premake
+    include "Four/vendor/imgui"
+
+group ""
 
 project "Four"
     location "Four"
@@ -58,7 +62,7 @@ project "Four"
 
     filter "system:windows"
         cppdialect "C++20"
-        staticruntime "On"
+        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -70,23 +74,23 @@ project "Four"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
         }
 
         filter "configurations:Debug"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
-            buildoptions "/MDd"
+            runtime "Debug"
             symbols "On"
 
         filter "configurations:Develpment"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
-            buildoptions "/MD"
+            runtime "Release"
             symbols "On"
             optimize "On"
 
         filter "configurations:Release"
             defines "FOUR_RELEASE"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"
 
         --filters { "system:windows", "configurations:Develpment"}
@@ -119,7 +123,7 @@ project "Sandbox"
 
     filter "system:windows"
         cppdialect "C++20"
-        staticruntime "On"
+        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -129,21 +133,17 @@ project "Sandbox"
 
         filter "configurations:Debug"
             defines "FOUR_DEBUG"
-            buildoptions "/MDd"
+            runtime "Debug"
             symbols "On"
 
         filter "configurations:Develpment"
             defines "FOUR_DEVELOPMENT"
-            buildoptions "/MD"
+            runtime "Release"
             symbols "On"
             optimize "On"
 
         filter "configurations:Release"
             defines "FOUR_RELEASE"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"
-
-        --filters { "system:windows", "configurations:Develpment"}
-        --    buildoptions "/MT" -- multi thread runtime lib
-
 
