@@ -51,7 +51,7 @@ namespace four {
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 
-		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+		io.DisplaySize = ImVec2(static_cast<float>(app.GetWindow().GetWidth()), static_cast<float>(app.GetWindow().GetHeight()));
 
 		io.DeltaTime = 1.f / 60.f;
 
@@ -146,9 +146,9 @@ namespace four {
 	bool ImGuiLayer::OnWindowResizedEvent(WindowResizeEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
+		io.DisplaySize = ImVec2(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
 		io.DisplayFramebufferScale = ImVec2(1.f, 1.f);
-		glViewport(0, 0, e.GetWidth(), e.GetHeight());
+		glViewport(0, 0, static_cast<GLsizei>(e.GetWidth()), static_cast<GLsizei>(e.GetHeight()));
 
 		return false;
 	}
