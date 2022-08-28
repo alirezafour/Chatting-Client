@@ -16,6 +16,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Four/vendor/GLFW/include"
 IncludeDir["Glad"] = "Four/vendor/Glad/include"
 IncludeDir["ImGui"] = "Four/vendor/imgui"
+IncludeDir["glm"] = "Four/vendor/glm"
 
 group "Dependecies"
     include "Four/vendor/GLFW" -- Adding glfw premake
@@ -48,7 +49,8 @@ project "Four"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}"
 
     }
 
@@ -114,7 +116,8 @@ project "Sandbox"
     includedirs
     {
         "Four/vendor/spdlog/include",
-        "Four/src"
+        "Four/src",
+        "%{IncludeDir.glm}"
     }
 
     links
