@@ -27,8 +27,10 @@ group ""
 
 project "Four"
     location "Four"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+    cppdialect "C++20"
+    staticruntime "on"
 
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-Intermediate/" .. outputdir .. "/%{prj.name}")
@@ -63,8 +65,6 @@ project "Four"
 	}
 
     filter "system:windows"
-        cppdialect "C++20"
-        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -75,11 +75,6 @@ project "Four"
             "USING_GLFW"
         }
 
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox\"")
-        }
-
         filter "configurations:Debug"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
             runtime "Debug"
@@ -88,7 +83,6 @@ project "Four"
         filter "configurations:Develpment"
             defines "FOUR_DEBUG;FOUR_ASSERTS_ENABLE"
             runtime "Release"
-            symbols "On"
             optimize "On"
 
         filter "configurations:Release"
@@ -96,8 +90,6 @@ project "Four"
             runtime "Release"
             optimize "On"
 
-        --filters { "system:windows", "configurations:Develpment"}
-        --    buildoptions "/MT" -- multi thread runtime lib
 
 project "Sandbox"
     location "Sandbox"
@@ -126,8 +118,9 @@ project "Sandbox"
     }
 
     filter "system:windows"
+        language "C++"
         cppdialect "C++20"
-        staticruntime "Off"
+        staticruntime "on"
         systemversion "latest"
 
         defines
@@ -139,16 +132,15 @@ project "Sandbox"
         filter "configurations:Debug"
             defines "FOUR_DEBUG"
             runtime "Debug"
-            symbols "On"
+            symbols "on"
 
         filter "configurations:Develpment"
             defines "FOUR_DEVELOPMENT"
             runtime "Release"
-            symbols "On"
-            optimize "On"
+            optimize "on"
 
         filter "configurations:Release"
             defines "FOUR_RELEASE"
             runtime "Release"
-            optimize "On"
+            optimize "on"
 

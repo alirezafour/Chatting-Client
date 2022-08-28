@@ -1,10 +1,14 @@
 #pragma once
 
 #ifdef FOUR_PLATFORM_WINDOWS
-	#ifdef FOUR_BUILD_DLL
-		#define FOUR_API __declspec(dllexport) 
+	#if FOUR_DYNAMIC_LINK
+		#ifdef FOUR_BUILD_DLL
+			#define FOUR_API __declspec(dllexport) 
+		#else
+			#define FOUR_API __declspec(dllimport)
+		#endif
 	#else
-		#define FOUR_API __declspec(dllimport)
+		#define FOUR_API
 	#endif
 #else
 	#error Four only support windows!
