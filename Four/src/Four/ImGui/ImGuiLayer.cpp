@@ -1,5 +1,7 @@
 #include "fourpch.h"
 #include "ImGuiLayer.h"
+
+#include "imgui.h"
 #include "Platforms/OpenGL/imgui_impl_glfw.h"
 #include "Platforms/OpenGL/imgui_impl_opengl3.h"
 
@@ -42,7 +44,7 @@ namespace four {
 
 	void ImGuiLayer::OnDetach()
 	{
-		throw std::logic_error("The method or operation is not implemented.");
+		
 	}
 
 	void ImGuiLayer::OnUpdate()

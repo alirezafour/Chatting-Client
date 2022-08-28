@@ -3,6 +3,8 @@
 
 #include "glad/glad.h"
 
+#include "Input.h"
+
 namespace four {
 
 #define BIND_FUNC_EVENT(x) std::bind(x, this, std::placeholders::_1)
@@ -61,6 +63,9 @@ namespace four {
 
 			for(Layer* layer : m_LayerStack)
 				layer->OnUpdate();
+
+// 			auto [mouseX, mouseY] = Input::GetMouseXY();
+// 			FOUR_LOG_CORE_TRACE("{0}, {1}", mouseX, mouseY);
 
 			m_Window->OnUpdate();
 		}

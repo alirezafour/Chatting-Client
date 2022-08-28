@@ -31,7 +31,7 @@ namespace four {
 	{
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
-			: m_XOffset(xOffset), m_YOffset(xOffset) {}
+			: m_XOffset(xOffset), m_YOffset(yOffset) {}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
 			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)

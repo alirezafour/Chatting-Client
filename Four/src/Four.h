@@ -5,6 +5,9 @@
 #include "Four/Application.h"
 #include "Four/Log.h"
 #include "Four/Layer.h"
+#include "Four/Input.h"
+#include "Four/KeyCodes.h"
+
 #include "Four/ImGui/ImGuiLayer.h"
 
 // -- Entry Point ==================

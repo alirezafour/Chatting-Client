@@ -69,7 +69,8 @@ project "Four"
         {
             "FOUR_PLATFORM_WINDOWS",
             "FOUR_BUILD_DLL",
-            "GLFW_INCLUDE_NONE"
+            "GLFW_INCLUDE_NONE",
+            "USING_GLFW"
         }
 
         postbuildcommands
@@ -129,6 +130,7 @@ project "Sandbox"
         defines
         {
             "FOUR_PLATFORM_WINDOWS",
+            "USING_GLFW"
         }
 
         filter "configurations:Debug"

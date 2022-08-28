@@ -11,6 +11,7 @@ namespace four {
 
 	static bool s_GLFWInitialized = false;
 
+
 	static void GLFWErrorCallback(int error_code, const char* description)
 	{
 		FOUR_LOG_CORE_ERROR("GLFW Error {0}: {1}", error_code, description);

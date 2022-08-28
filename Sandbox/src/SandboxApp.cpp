@@ -9,12 +9,15 @@ public:
 
 	void OnUpdate() override
 	{
-		FOUR_LOG_INFO("ExampleLayer::Update");
+		if (four::Input::IsKeyPressed(four::Key::KEY_TAB))
+		{
+			FOUR_LOG_INFO("Tab Key Down");
+		}
 	}
 
 	void OnEvent(four::Event& event) override
 	{
-		FOUR_LOG_TRACE("{0}", event);
+		
 	}
 };
 
