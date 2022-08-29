@@ -4,12 +4,8 @@ cmake_policy(SET CMP0048 NEW)
 
 
 #project setup
-project(FourProject VERSION 0.0.1 LANGUAGES CXX)
+project(Sandbox VERSION 0.0.1 LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
-
-# set the project name and version
-project(Tutorial VERSION 1.0)
-
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -20,16 +16,9 @@ add_subdirectory(Four)
 include_directories(Four/src)
 include_directories(Four/vendor/spdlog/include)
 
-project(Sandbox)
 add_executable(Sandbox Sandbox/src/SandboxApp.cpp)
-target_link_libraries(Sandbox PUBLIC Four)
 
-# add the binary tree to the search path for include files
-# so that we will find TutorialConfig.h
-target_include_directories(Sandbox PUBLIC
-                          "${PROJECT_BINARY_DIR}"
-                          "${PROJECT_SOURCE_DIR}/Four"
-)
+target_link_libraries(Sandbox PRIVATE Four)
 
 add_compile_definitions(FOUR_PLATFORM_WINDOWS)
 add_compile_definitions(USING_GLFW)

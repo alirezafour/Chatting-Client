@@ -6,8 +6,7 @@
 	url = https://github.com/glfw/glfw
 [submodule "Four/vendor/imgui"]
 	path = Four/vendor/imgui
-	url = https://github.com/ocornut/imgui
-	branch = docking
+	url = https://github.com/alirezafour/imgui
 [submodule "Four/vendor/glm"]
 	path = Four/vendor/glm
 	url = https://github.com/g-truc/glm

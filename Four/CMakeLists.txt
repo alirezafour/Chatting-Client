@@ -23,7 +23,6 @@ include_directories(vendor/GLFW/include)
 include_directories(vendor/ImGui)
 
 add_subdirectory(vendor/GLFW)
-add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/Glad)
 add_subdirectory(vendor/ImGui)
 
@@ -35,16 +34,25 @@ file(GLOB Four_SRC
 
      "src/Four/*.h"
      "src/Four/*.cpp"
+
      "src/Four/Event/*.h"
      "src/Four/Event/*.cpp"
+
      "src/Four/ImGui/*.h"
      "src/Four/ImGui/*.cpp"
 
      "src/Platforms/*.h"
      "src/Platforms/*.cpp"
+
+     "src/Platforms/OpenGL/*.h"
+     "src/Platforms/OpenGL/*.cpp"
+
+     "src/Platforms/Windows/*.h"
+     "src/Platforms/Windows/*.cpp"
+
 )
 
-add_library(Four SHARED
+add_library(Four STATIC
         ${Four_SRC}
 )
 
@@ -56,12 +64,7 @@ target_precompile_headers(Four PUBLIC
 
 target_link_libraries(Four PRIVATE glfw)
 target_link_libraries(Four PRIVATE glad)
-target_link_libraries(Four PRIVATE spdlog)
 target_link_libraries(Four PRIVATE imgui)
-
-
-#add_library(opengl32.lib STATIC IMPORTED)
-#target_link_libraries(Four PRIVATE opengl32.lib)
 
 
 add_compile_definitions(FOUR_PLATFORM_WINDOWS)
