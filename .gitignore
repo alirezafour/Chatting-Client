@@ -6,6 +6,26 @@
 bin/*
 bin-Intermediate/*
 
+#Cmake
+out/*
+[Dd]ebug/*
+CMakeFiles/*
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+CMakeDoxyfile.in
+CmakeDoxygenDefaults.cmake
+
 # bin from glad
 Four/vendor/Glad/bin/*
 Four/vendor/Glad/bin-Intermediate/*
