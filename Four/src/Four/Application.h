@@ -6,6 +6,8 @@
 #include "Window.h"
 #include "LayerStack.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 namespace four {
 
 	class FOUR_API Application
@@ -30,9 +32,11 @@ namespace four {
 
 	private:
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 		static Application* m_Instance;
+		float m_LastFrameTime = 0.f;
 	};
 
 	// define in clinet

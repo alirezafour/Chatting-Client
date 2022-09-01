@@ -5,6 +5,11 @@
 
 #include "Input.h"
 
+// #temp
+#include "glfw/glfw3.h"
+
+#include "Core/Deltatime.h"
+
 namespace four {
 
 #define BIND_FUNC_EVENT(x) std::bind(x, this, std::placeholders::_1)
@@ -17,6 +22,9 @@ namespace four {
 		m_Instance = this;
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_FUNC_EVENT(&Application::OnEvent));
+
+		m_ImGuiLayer = new ImGuiLayer();
+		PushOverlay(m_ImGuiLayer);
 	}
 
 
@@ -45,27 +53,37 @@ namespace four {
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
 		m_LayerStack.PushOverlay(overlay);
-		overlay->OnAttach();
 	}
 
 	void Application::Run()
 	{
 		while (m_Running)
 		{
+			// #temp TODO: platform base
+			float time = static_cast<float>(glfwGetTime());
+
+			Deltatime deltaTime = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			for(Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(deltaTime);
 
-// 			auto [mouseX, mouseY] = Input::GetMouseXY();
-// 			FOUR_LOG_CORE_TRACE("{0}, {1}", mouseX, mouseY);
+			// ImGui ~~~
+			m_ImGuiLayer->Begin();
+
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
+
+			m_ImGuiLayer->End();
+			// ImGui ~~~
 
 			m_Window->OnUpdate();
 		}

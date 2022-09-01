@@ -1,4 +1,5 @@
 #include <Four.h>
+#include "ImGui/imgui.h"
 
 class ExampleLayer : public four::Layer
 {
@@ -7,17 +8,26 @@ public:
 		:Layer("Example")
 	{}
 
-	void OnUpdate() override
+	void OnUpdate(four::Deltatime deltaTime) override
 	{
 		if (four::Input::IsKeyPressed(four::Key::KEY_TAB))
 		{
 			FOUR_LOG_INFO("Tab Key Down");
 		}
+		FOUR_LOG_TRACE("delta time: {0}s ({1}ms).", deltaTime.GetSecond(), deltaTime.GetMilliseconds());
 	}
 
 	void OnEvent(four::Event& event) override
 	{
 		
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("test");
+		ImGui::Text("Hello Sandbox!");
+		ImGui::End();
+
 	}
 };
 
@@ -27,7 +37,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new four::ImGuiLayer());
 	}
 	~Sandbox()
 	{

@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Deltatime.h"
 
 namespace four {
 
@@ -12,7 +13,8 @@ namespace four {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Deltatime deltaTime) {}
+		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 
 		inline const std::string& GetName() { return m_DebugName; }

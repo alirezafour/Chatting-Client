@@ -15,6 +15,7 @@ add_subdirectory(Four)
 
 include_directories(Four/src)
 include_directories(Four/vendor/spdlog/include)
+include_directories(Four/vendor)
 
 add_executable(Sandbox Sandbox/src/SandboxApp.cpp)
 

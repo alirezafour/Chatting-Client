@@ -109,7 +109,7 @@ project "Sandbox"
     {
         "Four/vendor/spdlog/include",
         "Four/src",
-        "%{IncludeDir.glm}"
+        "Four/vendor"
     }
 
     links

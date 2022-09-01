@@ -8,6 +8,8 @@
 #include "Four/Input.h"
 #include "Four/KeyCodes.h"
 
+#include "Four/Core/Deltatime.h"
+
 #include "Four/ImGui/ImGuiLayer.h"
 
 // -- Entry Point ==================
