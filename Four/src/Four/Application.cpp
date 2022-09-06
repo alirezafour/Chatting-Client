@@ -31,7 +31,6 @@ namespace four {
 
 	Application::~Application()
 	{
-
 	}
 
 
