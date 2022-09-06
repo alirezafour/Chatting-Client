@@ -40,13 +40,13 @@ namespace four {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_FUNC_EVENT(&Application::OnWindowClose));
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		for (auto & it : std::ranges::reverse_view(m_LayerStack))
 		{
-			(*--it)->OnEvent(e);
 			if (e.GetHandled())
 			{
 				break;
 			}
+			it->OnEvent(e);
 		}
 	}
 

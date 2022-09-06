@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <ranges>
 #include <unordered_map>
 #include <unordered_set>
 

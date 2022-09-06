@@ -33,6 +33,8 @@ namespace four {
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("asserts/fonts/NunitoSans/NunitoSans-Regular.ttf", 18.0f);
 		
 
 		ImGui::StyleColorsDark();
