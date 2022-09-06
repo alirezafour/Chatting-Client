@@ -18,6 +18,7 @@ namespace four {
 		inline static Application& Get() { return *m_Instance; }
 
 		void Run();
+		void Close();
 		inline Window& GetWindow() const { return *m_Window.get(); }
 
 	protected:
