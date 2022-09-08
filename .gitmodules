@@ -7,6 +7,7 @@
 [submodule "Four/vendor/imgui"]
 	path = Four/vendor/imgui
 	url = https://github.com/alirezafour/imgui
+	branch = docking
 [submodule "Four/vendor/glm"]
 	path = Four/vendor/glm
 	url = https://github.com/g-truc/glm
