@@ -1,6 +1,6 @@
 #include <Four.h>
 #include "ImGui/imgui.h"
-#include "Four/ImGui/ImGuiConsole.h"
+#include "ImGuiConsole.h"
 
 class ExampleLayer : public four::Layer
 {
@@ -53,8 +53,9 @@ public:
 	}
 
 private:
-	four::ImGuiConsole m_console;
+	ImGuiConsole m_console;
 };
+
 
 class Sandbox : public four::Application
 {

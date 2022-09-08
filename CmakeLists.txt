@@ -21,8 +21,18 @@ include_directories(Four/src)
 include_directories(Four/vendor/spdlog/include)
 include_directories(Four/vendor)
 include_directories(Four/vendor/imgui)
+include_directories(NetCommon/src)
+include_directories(NetCommon/vendor/asio/asio/include)
 
-add_executable(Sandbox Sandbox/src/SandboxApp.cpp)
+file(GLOB Sandbox_SRC
+     "Sandbox/src/*.h"
+     "Sandbox/src/*.cpp"
+
+     "Sandbox/src/ImGuiConsole.cpp"
+     "Sandbox/src/ImGuiConsole.h"
+)
+
+add_executable(Sandbox ${Sandbox_SRC})
 
 target_link_libraries(Sandbox PRIVATE Four)
 
