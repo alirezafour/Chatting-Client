@@ -1,5 +1,5 @@
 #include <Four.h>
-#include "ImGui/imgui.h"
+#include "imgui.h"
 #include "ImGuiConsole.h"
 
 class ExampleLayer : public four::Layer

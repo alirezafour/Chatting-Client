@@ -65,7 +65,7 @@ namespace four::net
 			m_Connection.release();
 		}
 
-		void SendMessage(const message<T>& msg)
+		void Send(const message<T>& msg)
 		{
 			if (IsConnected())
 				m_Connection->SendMessage(msg);

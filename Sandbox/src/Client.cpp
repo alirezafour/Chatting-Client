@@ -1,4 +1,5 @@
 #include "Client.h"
+#include <sstream>
 
 void Client::PingServer()
 {
@@ -9,7 +10,7 @@ void Client::PingServer()
 	std::chrono::system_clock::time_point timeNow = std::chrono::system_clock::now();
 
 	msg << timeNow;
-	SendMessage(msg);
+	Send(msg);
 }
 
 void Client::MessageAll(const std::string_view& msgToSend)
@@ -22,6 +23,6 @@ void Client::MessageAll(const std::string_view& msgToSend)
 		msg.body.push_back(each);
 	}
 	
-	SendMessage(msg);
+	Send(msg);
 }
 

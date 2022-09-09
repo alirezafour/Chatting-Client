@@ -45,7 +45,7 @@ namespace four::net
 			std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
 
 			// recalculate the message size
-			msg.header.size = static_cast<int32_t>(msg.size());
+			msg.header.size = static_cast<uint32_t>(msg.size());
 
 			return msg;
 		}

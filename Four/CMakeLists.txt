@@ -16,11 +16,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 #option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 # add includes
-include_directories(src)
-include_directories(vendor/spdlog/include)
-include_directories(vendor/Glad/include)
-include_directories(vendor/GLFW/include)
-include_directories(vendor/ImGui)
+include_directories(
+    src
+    vendor/spdlog/include
+    vendor/Glad/include
+    vendor/GLFW/include
+    vendor/ImGui
+)
 
 add_subdirectory(vendor/GLFW)
 add_subdirectory(vendor/Glad)
@@ -28,7 +30,7 @@ add_subdirectory(vendor/ImGui)
 
 
 
-file(GLOB Four_SRC
+file(GLOB SOURCES
      "src/*.h"
      "src/*.cpp"
 
@@ -44,17 +46,12 @@ file(GLOB Four_SRC
      "src/Platforms/*.h"
      "src/Platforms/*.cpp"
 
-     "src/Platforms/OpenGL/*.h"
-     "src/Platforms/OpenGL/*.cpp"
-
      "src/Platforms/Windows/*.h"
      "src/Platforms/Windows/*.cpp"
 
 )
 
-add_library(Four STATIC
-        ${Four_SRC}
-)
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
 # pch header
 target_precompile_headers(Four PUBLIC
@@ -62,14 +59,24 @@ target_precompile_headers(Four PUBLIC
     src/fourpch.cpp
 )
 
-target_link_libraries(Four PRIVATE glfw)
-target_link_libraries(Four PRIVATE glad)
-target_link_libraries(Four PRIVATE imgui)
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
+        glfw
+        glad
+        imgui
+)
 
 
-add_compile_definitions(FOUR_PLATFORM_WINDOWS)
-add_compile_definitions(FOUR_BUILD_DLL)
-add_compile_definitions(GLFW_INCLUDE_NONE)
-add_compile_definitions(USING_GLFW)
+add_compile_definitions(
+    FOUR_PLATFORM_WINDOWS
+    FOUR_BUILD_DLL
+    GLFW_INCLUDE_NONE
+    USING_GLFW
+)
 
+target_include_directories(${PROJECT_NAME} 
+	PUBLIC
+		$<INSTALL_INTERFACE:include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+)
 

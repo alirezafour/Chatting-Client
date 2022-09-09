@@ -7,6 +7,9 @@
 namespace four::net
 {
 	template<typename T>
+	class ServerInterface;
+
+	template<typename T>
 	class Connection : public std::enable_shared_from_this<Connection<T>>
 	{
 	public:
@@ -20,6 +23,19 @@ namespace four::net
 			: m_AsioContext(asioContext), m_Socket(std::move(socket)), m_QueueMessagesIn(queueMessagesIn)
 		{
 			m_OwnerType = parent;
+
+			if (m_OwnerType == owner::server)
+			{
+				m_HandshakeOut = uint64_t(std::chrono::system_clock::now().time_since_epoch().count());
+
+				// pre calculate the result
+				m_HandshakeCheck = scramble(m_HandshakeOut);
+			}
+			else
+			{
+				m_HandshakeIn = 0;
+				m_HandshakeOut = 0;
+			}
 		}
 
 		virtual ~Connection()
@@ -34,7 +50,8 @@ namespace four::net
 					{
 						if (!errorCode)
 						{
-							ReadHeader();
+							//ReadHeader();
+							ReadValidation();
 						}
 					});
 			}
@@ -70,17 +87,22 @@ namespace four::net
 			return m_ID;
 		}
 
-		void ConnectToClient(uint32_t uId = 0)
+		void ConnectToClient(four::net::ServerInterface<T>* server, uint32_t uId = 0)
 		{
 			if (m_OwnerType == owner::server)
 			{
 				if (IsConnected())
 				{
 					m_ID = uId;
-					ReadHeader();
+					//ReadHeader();
+
+					WriteValidation();
+
+					ReadValidation(server);
 				}
 			}
 		}
+
 
 	private:
 		// #ASYNC
@@ -103,7 +125,7 @@ namespace four::net
 					}
 					else
 					{
-						std::cout << "[" << m_ID << "] Read header failed.\n" << errorCode.message() << "\n";
+						std::cout << "[" << m_ID << "] Read header failed.\n[" << errorCode.message() << "]\n";
 						m_Socket.close();
 					}
 				});
@@ -121,7 +143,7 @@ namespace four::net
 					}
 					else
 					{
-						std::cout << "[" << m_ID << "] Read body failed.\n";
+						std::cout << "[" << m_ID << "] Read body failed.\n[" << errorCode.message() << "]\n";
 						m_Socket.close();
 					}
 				});
@@ -151,7 +173,7 @@ namespace four::net
 					}
 					else
 					{
-						std::cout << "[" << m_ID << "] Write header failed.\n";
+						std::cout << "[" << m_ID << "] Write header failed.\n[" << errorCode.message() << "]\n";
 						m_Socket.close();
 					}
 				});
@@ -174,7 +196,7 @@ namespace four::net
 					}
 					else
 					{
-						std::cout << "[" << m_ID << "] Write body failed.\n";
+						std::cout << "[" << m_ID << "] Write body failed.\n[" << errorCode.message() << "]\n";
 						m_Socket.close();
 					}
 
@@ -189,6 +211,72 @@ namespace four::net
 				m_QueueMessagesIn.push_back({ nullptr, m_MsgTemporaryIn });
 
 			ReadHeader(); // add another task after finishing to asio read and not finish his task
+		}
+
+		// #Encrypt data kapa
+		uint64_t scramble(uint64_t input)
+		{
+			uint64_t out = input ^ 0xEADFECCEEADFEC;
+			out = (out & 0xF0F0F0F0F0F0F0F0) >> 4 | (out & 0x0F0F0F0F0F0F0F0F) << 4;
+			return out ^ 0xEADFE3C1AADFE0;
+		}
+
+		// #ASYNC
+		void WriteValidation()
+		{
+			asio::async_write(m_Socket, asio::buffer(&m_HandshakeOut, sizeof(uint64_t)),
+				[this](std::error_code errorCode, std::size_t length)
+				{
+					if (!errorCode)
+					{
+						if (m_OwnerType == owner::client)
+						{
+							ReadHeader();
+						}
+					}
+					else
+					{
+						std::cout << "[" << errorCode.message() << "]\n";
+						m_Socket.close();
+					}
+				});
+		}
+
+		void ReadValidation(four::net::ServerInterface<T>* server = nullptr)
+		{
+			asio::async_read(m_Socket, asio::buffer(&m_HandshakeIn, sizeof(uint64_t)),
+				[this, server](std::error_code errorCode, std::size_t length)
+				{
+					if (!errorCode)
+					{
+						if (m_OwnerType == owner::server)
+						{
+							if (m_HandshakeIn == m_HandshakeCheck) // validate handshake
+							{
+								std::cout << "Client Validated.\n";
+								server->OnClientValidated(this->shared_from_this());
+
+								ReadHeader();
+							}
+							else
+							{
+								std::cout << "Client failed to validate.\n";
+								m_Socket.close();
+							}
+						}
+						else
+						{
+							m_HandshakeOut = scramble(m_HandshakeIn);
+
+							WriteValidation();
+						}
+					}
+					else
+					{
+						std::cout << "Client Disconnected (ReadValidation)\n" << errorCode.message() << "\n";
+						m_Socket.close();
+					}
+				});
 		}
 
 	protected:
@@ -212,5 +300,9 @@ namespace four::net
 
 		uint32_t m_ID = 0;
 
+		// Handshakes validation
+		uint64_t m_HandshakeOut = 0;
+		uint64_t m_HandshakeIn = 0;
+		uint64_t m_HandshakeCheck = 0;
 	};
 }

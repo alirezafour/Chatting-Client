@@ -2,44 +2,13 @@
 # Silence warning about PROJECT_VERSION
 cmake_policy(SET CMP0048 NEW)
 
-
 #project setup
-project(Sandbox VERSION 0.0.1 LANGUAGES CXX)
+project(MyProject VERSION 0.0.1 LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 add_subdirectory(Four)
-
-include_directories(Four/src)
-include_directories(Four/vendor/spdlog/include)
-include_directories(Four/vendor)
-include_directories(Four/vendor/imgui)
-include_directories(NetCommon/src)
-include_directories(NetCommon/vendor/asio/asio/include)
-
-file(GLOB Sandbox_SRC
-     "Sandbox/src/*.h"
-     "Sandbox/src/*.cpp"
-
-     "Sandbox/src/ImGuiConsole.cpp"
-     "Sandbox/src/ImGuiConsole.h"
-)
-
-add_executable(Sandbox ${Sandbox_SRC})
-
-target_link_libraries(Sandbox PRIVATE Four)
-
-add_compile_definitions(FOUR_PLATFORM_WINDOWS)
-add_compile_definitions(USING_GLFW)
-
-add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-                ${CMAKE_CURRENT_SOURCE_DIR}/asserts
-                ${CMAKE_CURRENT_BINARY_DIR}/bin/asserts)
+add_subdirectory(Sandbox)

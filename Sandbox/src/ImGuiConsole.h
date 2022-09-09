@@ -27,6 +27,9 @@ public:
 
 	int TextEditCallback(ImGuiInputTextCallbackData* data);
 
+protected:
+	void ConnectionHandle();
+
 private:
 	char                  InputBuf[256];
 	ImVector<char*>       Items;

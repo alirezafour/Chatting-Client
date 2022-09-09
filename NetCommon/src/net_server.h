@@ -66,7 +66,7 @@ namespace four::net
 						{
 							m_deqConnections.push_back(std::move(newConnection));
 
-							m_deqConnections.back()->ConnectToClient(m_IDCounter++);
+							m_deqConnections.back()->ConnectToClient(this, m_IDCounter++);
 
 							std::cout << "[" << m_deqConnections.back()->GetID() << "] Connection Approved.\n";
 						}
@@ -87,6 +87,8 @@ namespace four::net
 		// message to specific client
 		void MessageClient(std::shared_ptr<Connection<T>> client, const message<T>& msg)
 		{
+			std::cout << "Messaging [" << client->GetID() << "]..." << "\n";
+
 			if (client && client->IsConnected())
 			{
 				client->SendMessage(msg);
@@ -103,6 +105,8 @@ namespace four::net
 		// broadcast message to all clients
 		void MessageAllClients(const message<T>& msg, std::shared_ptr<Connection<T>> ignoreClient = nullptr)
 		{
+			std::cout << "Messaging all Client..." << "\n";
+
 			bool bInvalidClientExists = false;
 			for (auto& client : m_deqConnections)
 			{
@@ -144,17 +148,24 @@ namespace four::net
 	protected:
 		virtual bool OnClientConnect(std::shared_ptr<Connection<T>> client)
 		{
+			std::cout << "[" << client->GetID() << "] Connected." << "\n";
 			return false;
 		}
 
 		virtual void OnClientDisconected(std::shared_ptr<Connection<T>> client)
 		{
-
+			std::cout << "[" << client->GetID() << "] Disconnected." << "\n";
 		}
 
 		virtual void OnMessage(std::shared_ptr<Connection<T>> client, message<T>& msg)
 		{
+			std::cout << "[" << client->GetID() << "] received message: " << msg << "\n";
+		}
 
+	public:
+		virtual void OnClientValidated(std::shared_ptr<Connection<T>> client)
+		{
+			std::cout << "[" << client->GetID() << "] OnValidated." << "\n";
 		}
 
 	protected:

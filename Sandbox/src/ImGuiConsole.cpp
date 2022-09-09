@@ -1,4 +1,5 @@
 #include "ImGuiConsole.h"
+#include <sstream>
 
 ImGuiConsole::ImGuiConsole()
 {
@@ -67,6 +68,8 @@ void ImGuiConsole::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 
 void ImGuiConsole::Draw(const char* title, bool* p_open)
 {
+	ConnectionHandle();
+
 	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin(title, p_open))
 	{
@@ -352,4 +355,28 @@ int ImGuiConsole::TextEditCallback(ImGuiInputTextCallbackData* data)
 	}
 	}
 	return 0;
+}
+
+void ImGuiConsole::ConnectionHandle()
+{
+	if (m_Client.IsConnected())
+	{
+		if (!m_Client.Incomming().empty())
+		{
+			auto msg = m_Client.Incomming().pop_front().msg;
+			std::stringstream ss;
+			std::chrono::system_clock::time_point timeThen;
+			auto timeNow = std::chrono::system_clock::now();
+			switch (msg.header.id)
+			{
+			case CustomMsgTypes::ServerPing:
+				msg >> timeThen;
+				std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
+				//AddLog(ss.str());
+				break;
+			default:
+				break;
+			}
+		}
+	}
 }
