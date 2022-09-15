@@ -2,8 +2,18 @@
 #include <sstream>
 
 ImGuiConsole::ImGuiConsole()
+	: m_Client{}
 {
-	m_Client.Connect("127.0.0.1", 60000);
+	try {
+		m_Client.connect("127.0.0.1", "6000");
+		m_Client.SetCallbackMessageFuntion(std::bind(&ImGuiConsole::OnRecieveMessage, this, std::placeholders::_1));
+		m_Client.run();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << "\n";
+		std::exit(1);
+	}
 
 	ClearLog();
 	memset(InputBuf, 0, sizeof(InputBuf));
@@ -14,9 +24,10 @@ ImGuiConsole::ImGuiConsole()
 	Commands.push_back("HISTORY");
 	Commands.push_back("CLEAR");
 	Commands.push_back("CLASSIFY");
-	Commands.push_back("PING");
 	AutoScroll = true;
 	ScrollToBottom = false;
+
+	std::scoped_lock<std::mutex> lock(m_LogMutex);
 	AddLog("Welcome to Dear ImGui!");
 }
 
@@ -68,8 +79,6 @@ void ImGuiConsole::AddLog(const char* fmt, ...) IM_FMTARGS(2)
 
 void ImGuiConsole::Draw(const char* title, bool* p_open)
 {
-	ConnectionHandle();
-
 	ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
 	if (!ImGui::Begin(title, p_open))
 	{
@@ -94,9 +103,19 @@ void ImGuiConsole::Draw(const char* title, bool* p_open)
 
 	// TODO: display items starting from the bottom
 
-	if (ImGui::SmallButton("Add Debug Text")) { AddLog("%d some text", Items.Size); AddLog("some more text"); AddLog("display very important message here!"); }
+	if (ImGui::SmallButton("Add Debug Text")) 
+	{ 
+		std::scoped_lock<std::mutex> lock(m_LogMutex); 
+		AddLog("%d some text", Items.Size); 
+		AddLog("some more text"); 
+		AddLog("display very important message here!"); 
+	}
 	ImGui::SameLine();
-	if (ImGui::SmallButton("Add Debug Error")) { AddLog("[error] something went wrong"); }
+	if (ImGui::SmallButton("Add Debug Error")) 
+	{ 
+		std::scoped_lock<std::mutex> lock(m_LogMutex);
+		AddLog("[error] something went wrong"); 
+	}
 	ImGui::SameLine();
 	if (ImGui::SmallButton("Clear")) { ClearLog(); }
 	ImGui::SameLine();
@@ -207,7 +226,11 @@ void ImGuiConsole::Draw(const char* title, bool* p_open)
 
 void ImGuiConsole::ExecCommand(const char* command_line)
 {
-	AddLog("# %s\n", command_line);
+	{
+		std::scoped_lock<std::mutex> lock(m_LogMutex);
+		AddLog("# %s\n", command_line);
+	}
+	m_Client.writer(command_line);
 
 	// Insert into history. First find match and delete it so it can be pushed to the back.
 	// This isn't trying to be smart or optimal.
@@ -228,21 +251,21 @@ void ImGuiConsole::ExecCommand(const char* command_line)
 	}
 	else if (Stricmp(command_line, "HELP") == 0)
 	{
+		std::scoped_lock<std::mutex> lock(m_LogMutex);
 		AddLog("Commands:");
 		for (int i = 0; i < Commands.Size; i++)
 			AddLog("- %s", Commands[i]);
 	}
 	else if (Stricmp(command_line, "HISTORY") == 0)
 	{
+		std::scoped_lock<std::mutex> lock(m_LogMutex);
 		int first = History.Size - 10;
 		for (int i = first > 0 ? first : 0; i < History.Size; i++)
 			AddLog("%3d: %s\n", i, History[i]);
-	} if (Stricmp(command_line, "PING") == 0)
-	{
-		m_Client.PingServer();
-	}
+	} 
 	else
 	{
+		std::scoped_lock<std::mutex> lock(m_LogMutex);
 		AddLog("Unknown command: '%s'\n", command_line);
 	}
 
@@ -285,6 +308,7 @@ int ImGuiConsole::TextEditCallback(ImGuiInputTextCallbackData* data)
 		if (candidates.Size == 0)
 		{
 			// No match
+			std::scoped_lock<std::mutex> lock(m_LogMutex);
 			AddLog("No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
 		}
 		else if (candidates.Size == 1)
@@ -320,9 +344,12 @@ int ImGuiConsole::TextEditCallback(ImGuiInputTextCallbackData* data)
 			}
 
 			// List matches
-			AddLog("Possible matches:\n");
-			for (int i = 0; i < candidates.Size; i++)
-				AddLog("- %s\n", candidates[i]);
+			{
+				std::scoped_lock<std::mutex> lock(m_LogMutex);
+				AddLog("Possible matches:\n");
+				for (int i = 0; i < candidates.Size; i++)
+					AddLog("- %s\n", candidates[i]);
+			}
 		}
 
 		break;
@@ -357,26 +384,8 @@ int ImGuiConsole::TextEditCallback(ImGuiInputTextCallbackData* data)
 	return 0;
 }
 
-void ImGuiConsole::ConnectionHandle()
+void ImGuiConsole::OnRecieveMessage(std::string message)
 {
-	if (m_Client.IsConnected())
-	{
-		if (!m_Client.Incomming().empty())
-		{
-			auto msg = m_Client.Incomming().pop_front().msg;
-			std::stringstream ss;
-			std::chrono::system_clock::time_point timeThen;
-			auto timeNow = std::chrono::system_clock::now();
-			switch (msg.header.id)
-			{
-			case CustomMsgTypes::ServerPing:
-				msg >> timeThen;
-				std::cout << "Ping: " << std::chrono::duration<double>(timeNow - timeThen).count() << "\n";
-				//AddLog(ss.str());
-				break;
-			default:
-				break;
-			}
-		}
-	}
+	std::scoped_lock<std::mutex> lock(m_LogMutex);
+	AddLog("%s", message.c_str());
 }

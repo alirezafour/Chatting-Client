@@ -27,8 +27,9 @@ public:
 
 	int TextEditCallback(ImGuiInputTextCallbackData* data);
 
+
 protected:
-	void ConnectionHandle();
+	void OnRecieveMessage(std::string message);
 
 private:
 	char                  InputBuf[256];
@@ -40,8 +41,8 @@ private:
 	bool                  AutoScroll;
 	bool                  ScrollToBottom;
 
-	Client m_Client;
-
+	client_chat m_Client;
+	std::mutex m_LogMutex;
 };
 
 

@@ -15,8 +15,8 @@ include_directories(${PARENT_DIR}/src)
 
 include_directories(${PARENT_DIR}/Four/vendor/spdlog/include)
 include_directories(${PARENT_DIR}/Four/vendor/imgui)
-include_directories(${PARENT_DIR}/NetCommon/src)
-include_directories(${PARENT_DIR}/NetCommon/vendor/asio/asio/include)
+
+find_package(Boost)
 
 file(GLOB SOURCES
      "src/*.h"
@@ -28,6 +28,18 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC Four)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Four)
+
+target_include_directories(${PROJECT_NAME} 
+	PUBLIC
+		$<INSTALL_INTERFACE:include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		${Boost_INCLUDE_DIR}
+)
+
+target_link_libraries(${PROJECT_NAME}
+	PUBLIC
+		${Boost_LIBRARIES}
+)
 
 add_compile_definitions(FOUR_PLATFORM_WINDOWS)
 add_compile_definitions(USING_GLFW)
