@@ -1,7 +1,7 @@
 # CMakeList.txt : CMake project for FourNetworking, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.12)
+cmake_minimum_required (VERSION 3.16)
 project(SampleServer)
 
 set(CMAKE_CXX_STANDARD 20)
