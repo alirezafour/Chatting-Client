@@ -4,16 +4,8 @@
 ImGuiConsole::ImGuiConsole()
 	: m_Client{}
 {
-	try {
-		m_Client.connect("127.0.0.1", "6000");
-		m_Client.SetCallbackMessageFuntion(std::bind(&ImGuiConsole::OnRecieveMessage, this, std::placeholders::_1));
-		m_Client.run();
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << e.what() << "\n";
-		std::exit(1);
-	}
+	ConnectClient();
+	m_Client.SetCallbackErrorsFuntion(std::bind(&ImGuiConsole::OnClientError, this, std::placeholders::_1));
 
 	ClearLog();
 	memset(InputBuf, 0, sizeof(InputBuf));
@@ -103,18 +95,9 @@ void ImGuiConsole::Draw(const char* title, bool* p_open)
 
 	// TODO: display items starting from the bottom
 
-	if (ImGui::SmallButton("Add Debug Text")) 
+	if (ImGui::SmallButton("Connect To Server"))
 	{ 
-		std::scoped_lock<std::mutex> lock(m_LogMutex); 
-		AddLog("%d some text", Items.Size); 
-		AddLog("some more text"); 
-		AddLog("display very important message here!"); 
-	}
-	ImGui::SameLine();
-	if (ImGui::SmallButton("Add Debug Error")) 
-	{ 
-		std::scoped_lock<std::mutex> lock(m_LogMutex);
-		AddLog("[error] something went wrong"); 
+		ConnectClient();
 	}
 	ImGui::SameLine();
 	if (ImGui::SmallButton("Clear")) { ClearLog(); }
@@ -226,12 +209,6 @@ void ImGuiConsole::Draw(const char* title, bool* p_open)
 
 void ImGuiConsole::ExecCommand(const char* command_line)
 {
-	{
-		std::scoped_lock<std::mutex> lock(m_LogMutex);
-		AddLog("# %s\n", command_line);
-	}
-	m_Client.writer(command_line);
-
 	// Insert into history. First find match and delete it so it can be pushed to the back.
 	// This isn't trying to be smart or optimal.
 	HistoryPos = -1;
@@ -265,8 +242,7 @@ void ImGuiConsole::ExecCommand(const char* command_line)
 	} 
 	else
 	{
-		std::scoped_lock<std::mutex> lock(m_LogMutex);
-		AddLog("Unknown command: '%s'\n", command_line);
+		m_Client.SendMessage(command_line);
 	}
 
 	// On command input, we scroll to bottom even if AutoScroll==false
@@ -388,4 +364,17 @@ void ImGuiConsole::OnRecieveMessage(std::string message)
 {
 	std::scoped_lock<std::mutex> lock(m_LogMutex);
 	AddLog("%s", message.c_str());
+}
+
+void ImGuiConsole::OnClientError(std::string_view errorMessage)
+{
+	std::scoped_lock<std::mutex> lock(m_LogMutex);
+	AddLog("%s\n", errorMessage);
+}
+
+void ImGuiConsole::ConnectClient()
+{
+	m_Client.Connect("127.0.0.1", "6000");
+	m_Client.SetCallbackMessageFuntion(std::bind(&ImGuiConsole::OnRecieveMessage, this, std::placeholders::_1));
+	m_Client.Run();
 }

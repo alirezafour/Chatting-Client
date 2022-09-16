@@ -1,6 +1,6 @@
 #pragma once
 #include "imgui.h"
-#include "Client.h"
+#include "ChatClient.h"
 
 class ImGuiConsole
 {
@@ -27,9 +27,12 @@ public:
 
 	int TextEditCallback(ImGuiInputTextCallbackData* data);
 
-
 protected:
 	void OnRecieveMessage(std::string message);
+	void OnClientError(std::string_view errorMessage);
+
+private:
+	void ConnectClient();
 
 private:
 	char                  InputBuf[256];
@@ -41,7 +44,7 @@ private:
 	bool                  AutoScroll;
 	bool                  ScrollToBottom;
 
-	client_chat m_Client;
+	ChatClient m_Client;
 	std::mutex m_LogMutex;
 };
 
