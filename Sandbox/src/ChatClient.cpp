@@ -37,7 +37,7 @@ void ChatClient::Connect(const std::string& ip, const std::string& port)
 	{
 		if (m_CallbackErrorsFunction)
 		{
-			m_CallbackErrorsFunction("Connection failed!");
+			m_CallbackErrorsFunction(e.what());
 		}
 		Clear();
 	}
@@ -60,8 +60,7 @@ awaitable<void> ChatClient::Do_Reading()
 	{
 		if(m_CallbackErrorsFunction)
 		{
-			m_CallbackErrorsFunction("Reading failed!");
-			m_CallbackErrorsFunction("Connection closed.");
+			m_CallbackErrorsFunction(e.what());
 		}
 		Stop();
 	}

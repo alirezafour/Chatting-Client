@@ -369,7 +369,7 @@ void ImGuiConsole::OnRecieveMessage(std::string message)
 void ImGuiConsole::OnClientError(std::string_view errorMessage)
 {
 	std::scoped_lock<std::mutex> lock(m_LogMutex);
-	AddLog("%s\n", errorMessage);
+	AddLog("%s\n", errorMessage.data());
 }
 
 void ImGuiConsole::ConnectClient()
