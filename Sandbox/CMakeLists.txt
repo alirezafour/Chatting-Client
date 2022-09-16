@@ -47,4 +47,12 @@ add_compile_definitions(USING_GLFW)
 add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
                 ${CMAKE_CURRENT_SOURCE_DIR}/asserts
-                ${CMAKE_CURRENT_BINARY_DIR}/asserts)
+                ${CMAKE_CURRENT_BINARY_DIR}/asserts
+)
+
+# Adding the tests:
+option(ENABLE_TESTING "Enable the tests" ${PROJECT_IS_TOP_LEVEL})
+if(true)
+  enable_testing()
+  add_subdirectory(test)
+endif()

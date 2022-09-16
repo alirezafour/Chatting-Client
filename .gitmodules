@@ -11,6 +11,4 @@
 [submodule "Four/vendor/glm"]
 	path = Four/vendor/glm
 	url = https://github.com/g-truc/glm
-[submodule "NetCommon/vendor/asio"]
-	path = NetCommon/vendor/asio
-	url = https://github.com/chriskohlhoff/asio
+
