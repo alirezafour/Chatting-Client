@@ -44,7 +44,7 @@ private:
 	bool                  AutoScroll;
 	bool                  ScrollToBottom;
 
-	ChatClient m_Client;
+	std::unique_ptr<ChatClient> m_Client;
 	std::mutex m_LogMutex;
 };
 

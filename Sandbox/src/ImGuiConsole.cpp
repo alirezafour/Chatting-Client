@@ -2,10 +2,8 @@
 #include <sstream>
 
 ImGuiConsole::ImGuiConsole()
-	: m_Client{}
 {
 	ConnectClient();
-	m_Client.SetCallbackErrorsFuntion(std::bind(&ImGuiConsole::OnClientError, this, std::placeholders::_1));
 
 	ClearLog();
 	memset(InputBuf, 0, sizeof(InputBuf));
@@ -242,7 +240,8 @@ void ImGuiConsole::ExecCommand(const char* command_line)
 	} 
 	else
 	{
-		m_Client.SendMessage(command_line);
+		if(m_Client)
+			m_Client->SendMessage(command_line);
 	}
 
 	// On command input, we scroll to bottom even if AutoScroll==false
@@ -374,7 +373,9 @@ void ImGuiConsole::OnClientError(std::string_view errorMessage)
 
 void ImGuiConsole::ConnectClient()
 {
-	m_Client.Connect("127.0.0.1", "6000");
-	m_Client.SetCallbackMessageFuntion(std::bind(&ImGuiConsole::OnRecieveMessage, this, std::placeholders::_1));
-	m_Client.Run();
+	m_Client.reset(new ChatClient());
+	m_Client->SetCallbackMessageFuntion(std::bind(&ImGuiConsole::OnRecieveMessage, this, std::placeholders::_1));
+	m_Client->SetCallbackErrorsFuntion(std::bind(&ImGuiConsole::OnClientError, this, std::placeholders::_1));
+	m_Client->Connect("127.0.0.1", "6000");
+	m_Client->Run();
 }

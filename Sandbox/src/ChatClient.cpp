@@ -12,6 +12,7 @@ using boost::asio::co_spawn;
 using boost::asio::awaitable;
 using boost::asio::detached;
 using boost::asio::use_awaitable;
+using boost::system::error_code;
 
 ChatClient::ChatClient() 
 	: m_io_context{}
@@ -23,24 +24,35 @@ ChatClient::ChatClient()
 ChatClient::~ChatClient()
 {
 	Stop();
+	if (m_ThreadContext.joinable())
+		m_ThreadContext.join();
 }
 
 void ChatClient::Connect(const std::string& ip, const std::string& port)
 {
-	try
-	{
-		tcp::resolver::results_type endpoints = m_Resolver.resolve(ip, port);
-		boost::asio::connect(m_Socket, endpoints);
-	}
-
-	catch (const std::exception& e)
-	{
-		if (m_CallbackErrorsFunction)
+	tcp::resolver::results_type endpoints = m_Resolver.resolve(ip, port);
+	boost::asio::async_connect(m_Socket, endpoints, [this](const error_code& errorCode, const tcp::endpoint&)
 		{
-			m_CallbackErrorsFunction(e.what());
-		}
-		Clear();
-	}
+			if (!errorCode)
+			{
+				if(m_CallbackMessageFunction)
+				{
+					m_CallbackMessageFunction("Connected!");
+				}
+			}
+			else
+			{
+				if (m_CallbackErrorsFunction)
+				{
+					m_CallbackErrorsFunction(errorCode.what());
+				}
+				if (m_CallbackMessageFunction)
+				{
+					m_CallbackMessageFunction("Connection Failed!");
+				}
+				Clear();
+			}
+		});
 }
 
 awaitable<void> ChatClient::Do_Reading()
@@ -118,6 +130,7 @@ void ChatClient::Run()
 	co_spawn(m_io_context,
 		[this] { return Do_Reading(); },
 		detached);
+
 	m_ThreadContext = std::thread([this]() { m_io_context.run(); });
 }
 
@@ -141,8 +154,9 @@ void ChatClient::SendMessage(std::string message)
 
 void ChatClient::Stop()
 {
-	m_Socket.close();
+	if(m_Socket.is_open())
+		m_Socket.close();
 
-	if(m_ThreadContext.joinable())
-		m_ThreadContext.join();
+	if(!m_io_context.stopped())
+		m_io_context.stop();
 }
