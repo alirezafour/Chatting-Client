@@ -10,7 +10,7 @@ env:
   
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
@@ -25,28 +25,25 @@ jobs:
           cmake-version: '3.16.x'
       - name: Setup Ninja
         uses: ashutoshvarma/setup-ninja@master
-      - name: make build dir
-        run: mkdir build && cd build
       - name: Conan profile update
         run:  |
             conan profile new default --detect
-            conan profile update settings.compiler=gcc default
-            conan profile update settings.compiler.version=10 default
+            conan profile update settings.compiler=Visual Studio default
+            conan profile update settings.compiler.version=17 default
             conan profile update settings.compiler.cppstd=20 default
-            conan profile update env.CC=[/usr/bin/gcc-10] default
-            conan profile update env.CXX=[/usr/bin/g++-10] default
-            conan profile update conf.tools.cmake.cmaketoolchain:generator=Ninja default
+            conan profile update settings.build_type=Release default
             conan profile show default
 
-      #- name: Conan install dependencies
-      #  run:  |
-      #      conan install . \
-      #     -s build_type=${{env.BUILD_TYPE}} \
-      #     --install-folder=${{github.workspace}}/build \
-      #     -pr default \
-      #     -b=missing
-      #- name: run cmake
-      #  run: cmake -B ${{github.workspace}}/build
-      #- name: build with cmake
-      #  run: cmake --build ${{github.workspace}}/build --config Release
+      - name: Conan install dependencies
+        run:  |
+            mkdir build
+            conan install . \
+            -s build_type=${{env.BUILD_TYPE}} \
+            --install-folder=${{github.workspace}}/build \
+            -pr default \
+            -b=missing
+      - name: run cmake and build
+        run: |
+          cmake -B ${{github.workspace}}/build
+          cmake --build ${{github.workspace}}/build --config Release
       
