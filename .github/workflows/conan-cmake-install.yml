@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.7
       - name: Install Conan
-        run: pip install conan pytest && conan --version
+        uses: turtlebrowser/get-conan@v1.2
       - name: Setup cmake
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
@@ -38,15 +38,15 @@ jobs:
             conan profile update conf.tools.cmake.cmaketoolchain:generator=Ninja default
             conan profile show default
 
-      - name: Conan install dependencies
-        run:  |
-            conan install . \
-            -s build_type=${{env.BUILD_TYPE}} \
-            --install-folder=${{github.workspace}}/build \
-            -pr default \
-            -b=missing
-      - name: run cmake
-        run: cmake -B ${{github.workspace}}/build
-      - name: build with cmake
-        run: cmake --build ${{github.workspace}}/build --config Release
+      #- name: Conan install dependencies
+      #  run:  |
+      #      conan install . \
+      #     -s build_type=${{env.BUILD_TYPE}} \
+      #     --install-folder=${{github.workspace}}/build \
+      #     -pr default \
+      #     -b=missing
+      #- name: run cmake
+      #  run: cmake -B ${{github.workspace}}/build
+      #- name: build with cmake
+      #  run: cmake --build ${{github.workspace}}/build --config Release
       
