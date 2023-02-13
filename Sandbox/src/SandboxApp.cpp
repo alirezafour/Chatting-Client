@@ -12,11 +12,7 @@ public:
 
 	void OnUpdate(four::Deltatime deltaTime) override
 	{
-		// sample check if key down
-		if (four::Input::IsKeyPressed(four::Key::KEY_TAB))
-		{
-			FOUR_LOG_INFO("Tab Key Down");
-		}
+
 	}
 
 	void OnEvent(four::Event& event) override

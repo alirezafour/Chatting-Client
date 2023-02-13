@@ -1,0 +1,12 @@
+[requires]
+boost/1.80.0
+imgui/cci.20230105+1.89.2.docking
+glm/0.9.9.8
+glfw/3.3.8
+spdlog/1.11.0
+glad/0.1.36
+
+
+
+[generators]
+cmake

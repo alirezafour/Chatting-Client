@@ -12,23 +12,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # multi process compiling
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
+# setup conan
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
 # set as shared library
 #option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 # add includes
 include_directories(
     src
-    vendor/spdlog/include
-    vendor/Glad/include
-    vendor/GLFW/include
-    vendor/ImGui
 )
-
-add_subdirectory(vendor/GLFW)
-add_subdirectory(vendor/Glad)
-add_subdirectory(vendor/ImGui)
-
-
 
 file(GLOB SOURCES
      "src/*.h"
@@ -61,11 +55,11 @@ target_precompile_headers(Four PUBLIC
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
-        glfw
-        glad
-        imgui
+        CONAN_PKG::glfw
+        CONAN_PKG::glad
+        CONAN_PKG::imgui
+        CONAN_PKG::spdlog
 )
-
 
 add_compile_definitions(
     FOUR_PLATFORM_WINDOWS

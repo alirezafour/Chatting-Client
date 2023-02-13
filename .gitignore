@@ -8,6 +8,7 @@ bin-Intermediate/*
 
 #Cmake
 out/*
+[Bb]uild/*
 [Dd]ebug/*
 CMakeFiles/*
 
@@ -25,10 +26,6 @@ _deps
 
 CMakeDoxyfile.in
 CmakeDoxygenDefaults.cmake
-
-# bin from glad
-Four/vendor/Glad/bin/*
-Four/vendor/Glad/bin-Intermediate/*
 
 # user 
 *.user
