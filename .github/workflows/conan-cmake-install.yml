@@ -38,7 +38,7 @@ jobs:
         run:  |
             mkdir build
             cd build
-            conan install .. --settings=build_type=Release --build=missing 
+            conan install .. --settings=build_type=Release --build=missing --profile default
       - name: run cmake and build
         run: |
           cmake -B ${{github.workspace}}/build
